@@ -1,3 +1,5 @@
+;; -*- mode: scheme -*-
+
 (rule
  (targets swagger_j.ml swagger_j.mli)
  (deps    swagger.atd)
@@ -11,4 +13,6 @@
 (library
  (name swagger)
  (public_name swagger)
+ (inline_tests)
+ (preprocess (pps ppx_inline_test))
  (libraries atdgen re.pcre yojson))

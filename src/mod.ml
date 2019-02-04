@@ -22,6 +22,15 @@ let module_name s =
   |> String.split_on_char '.'
   |> List.hd
 
+let%test _ = module_name "some_module"        = "Some_module"
+let%test _ = module_name "some_module.name"   = "Some_module"
+let%test _ = module_name "{Some_module}"      = "By_some_module"
+let%test _ = module_name "{Some_module.name}" = "By_some_module"
+let%test _ = module_name "With Space"         = "With_space"
+let%test _ = module_name "With     Spaces"    = "With_spaces"
+let%test _ = module_name "With-hyphen"        = "With_hyphen"
+let%test _ = module_name "With----hyphens"    = "With_hyphens"
+
 let create ~name
            ?descr
            ?(recursive = false)

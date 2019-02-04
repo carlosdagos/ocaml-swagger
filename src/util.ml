@@ -11,9 +11,13 @@ let rec keep_some = function
   | None :: xs -> keep_some xs
 
 let snake_case =
+  (* Starts with a capital letter, and is followed by two or more letters *)
   let re1 = Re.Pcre.regexp "([A-Z]+)([A-Z][a-z]{2,})" in
+  (* Starts with a lowercase alphanumeric char and is followed by an uppercase
+     letter *)
   let re2 = Re.Pcre.regexp "([a-z0-9])([A-Z])" in
-  let re3 = Re.compile (Re.Pcre.re "-") in
+  (* Is not an alphanumeric character or a dot *)
+  let re3 = Re.Pcre.regexp "([^A-Za-z0-9\\.]+)" in
   let underscore re s =
     let replace groups =
       sprintf "%s_%s"
@@ -30,6 +34,14 @@ let snake_case =
         ^ String.lowercase_ascii (String.sub s 1 (String.length s - 1))
     else
       s
+
+let%test _ = snake_case "Kubernetes" = "Kubernetes"
+let%test _ = snake_case "MY API Endpoints" = "My_api_endpoints"
+let%test _ = snake_case "Multiple   Spaces" = "Multiple_spaces"
+let%test _ = snake_case "Weird@@@???Characters" = "Weird_characters"
+let%test _ = snake_case "Multiple____Underscores" = "Multiple_underscores"
+let%test _ = snake_case "all lowercase" = "all_lowercase"
+let%test _ = snake_case "with.some.dots" = "with.some.dots"
 
 let format_comment =
   let re = Re.Pcre.regexp "[{}@\\[\\]]" in
